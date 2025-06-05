@@ -62,5 +62,13 @@ plt.subplot(1, 2, 1)
 sns.histplot(train[numeric_features[3]], kde=True)
 plt.title("Histogram Sebelum Standardisasi")
 
+# Identifikasi baris duplikat
+
+duplicates = df.duplicated()
+
+print("Baris duplikat: ")
+print(df[duplicates])
+
+
 # sample = pd.read_csv("sample_submission.csv")
 # train.head()
