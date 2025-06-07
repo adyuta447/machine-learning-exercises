@@ -114,5 +114,35 @@ missing_data = pd.DataFrame({
 
 missing_data[missing_data['Missing Values'] > 0]
 
+# Menghitung jumlah variabel
+num_vars = df_lencoder.shape[1]
+
+# Menentukan jumlah baris dan kolom untuk frid
+n_cols = 4
+n_rows = -(-num_vars // n_cols)
+
+# Membuat subplot
+fig, axes = plt.subplots(n_rows, n_cols, figsize=(20, n_rows * 4))
+
+# Flatten exes array
+axes = axes.flatten()
+
+# Plot setiap variabel
+for i, column in enumerate(df_lencoder.columns):
+    df_lencoder[column].hist(ax=axes[i], bins=20, edgecolor='black')
+    axes[i].set_title(column)
+    axes[i].set_xlabel('Value')
+    axes[i].set_ylabel('Frequency')
+
+# Menghapus subplot yang tak terpakai
+for j in range(i + 1, len(axes)):
+    fig.delaxes(axes[j])
+
+# Menyesuaikan layout
+plt.tight_layout()
+plt.show()
+
+
+
 # sample = pd.read_csv("sample_submission.csv")
 # train.head()
