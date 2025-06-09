@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
+import sklearn
 
 train = pd.read_csv("train.csv")
 train.head()
@@ -139,10 +140,44 @@ for j in range(i + 1, len(axes)):
     fig.delaxes(axes[j])
 
 # Menyesuaikan layout
+# plt.tight_layout()
+# plt.show()
+
+# Visualisasi distribusi data untuk beberapa kolom
+columns_to_plot = ['OverallQual', 'YearBuilt', 'LotArea', 'SaleType', 'SaleCondition']
+plt.figure(figsize=(15, 10))
+for i, column in enumerate(columns_to_plot, 1):
+    plt.subplot(2, 3, i)
+    sns.histplot(df_lencoder[column], kde=True, bins=30)
+    plt.title(f'Distribution of {column}')
+
 plt.tight_layout()
 plt.show()
 
 
+# Visualisasi korelasi antar variabel numerik
+plt.figure(figsize=(12, 10))
+correlation_matrix = df_lencoder.corr()
+
+sns.heatmap(correlation_matrix, annot=False, cmap='coolwarm', vmin=-1, vmax=1)
+plt.title('Correlation Matrix')
+plt.show()
+
+# Menghitung korelasi antara variabel target dan semua variabel lain
+target_corr = df_lencoder.corr()['SalePrice']
+
+target_corr_sorted = target_corr.abs().sort_values(ascending=False)
+
+plt.figure(figsize=(10, 6))
+target_corr_sorted.plot(kind='bar')
+plt.title(f'Correlation with SalePrice')
+plt.xlabel('Variables')
+plt.ylabel('Correlation Coefficient')
+plt.show()
+
+# Memisahkan fitur (X) dan target (Y)
+X = df_lencoder.drop(columns=['SalePrice'])
+y = df_lencoder['SalePrice']
 
 # sample = pd.read_csv("sample_submission.csv")
 # train.head()
