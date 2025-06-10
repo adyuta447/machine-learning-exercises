@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 import sklearn
 
 train = pd.read_csv("train.csv")
@@ -178,6 +179,17 @@ plt.show()
 # Memisahkan fitur (X) dan target (Y)
 X = df_lencoder.drop(columns=['SalePrice'])
 y = df_lencoder['SalePrice']
+
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+
+# Menghitung panjang/jumlah data
+print("Jumlah data: ", len(X))
+
+# Menghitung panjang/jumlah data pada x_test
+print("Jumlah data latih: ", len(x_train))
+
+# Menghitung panjang/jumlah data pada x_test
+print("Jumlah data test: ", len(x_test))
 
 # sample = pd.read_csv("sample_submission.csv")
 # train.head()
