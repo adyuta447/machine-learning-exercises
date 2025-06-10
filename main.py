@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+from sklearn import linear_model
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import sklearn
 
 train = pd.read_csv("train.csv")
@@ -190,6 +194,32 @@ print("Jumlah data latih: ", len(x_train))
 
 # Menghitung panjang/jumlah data pada x_test
 print("Jumlah data test: ", len(x_test))
+
+# Melatih model 1 Angle Regression
+lars = linear_model.Lars(n_nonzero_coefs=1).fit(x_train, y_train)
+
+# Melatih model 2 Linear Regression
+LR = LinearRegression().fit(x_train, y_train)
+
+# Melatih model 3 Gradient Boosting Regressor
+GBR = GradientBoostingRegressor(random_state=184)
+GBR.fit(x_train, y_train)
+
+# Evaluasi model LARS
+pred_lars = lars.predict(x_test)
+mae_lars = mean_absolute_error(y_test, pred_lars)
+mse_lars = mean_squared_error(y_test, pred_lars)
+r2_lars = r2_score(y_test, pred_lars)
+
+data = {
+    'MAE': [mae_lars],
+    'MSE': [mse_lars],
+    'R2': [r2_lars]
+}
+
+# Konversi dictionary
+df_results = pd.DataFrame(data, index=['Lars'])
+df_results
 
 # sample = pd.read_csv("sample_submission.csv")
 # train.head()
