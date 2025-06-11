@@ -10,6 +10,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import sklearn
+import joblib
+import pickle
 
 train = pd.read_csv("train.csv")
 train.head()
@@ -244,6 +246,12 @@ df_results = pd.DataFrame({
 }, index=['Lars', 'LinearRegression', 'GradientBoosting'])
 
 print(df_results)
+ 
+# Menyimpan model ke dalam file
+joblib.dump(GBR, 'gbr_model.joblib')
+
+with open('gbr_model.pkl', 'wb') as file:
+    pickle.dump(GBR, file)
 
 # sample = pd.read_csv("sample_submission.csv")
 # train.head()
