@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
+from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn import linear_model
 from sklearn.linear_model import LinearRegression
@@ -184,7 +185,10 @@ plt.show()
 X = df_lencoder.drop(columns=['SalePrice'])
 y = df_lencoder['SalePrice']
 
-x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+imputer = SimpleImputer(strategy='mean')
+X_imputed = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
+
+x_train, x_test, y_train, y_test = train_test_split(X_imputed, y, test_size=0.2, random_state=1)
 
 # Menghitung panjang/jumlah data
 print("Jumlah data: ", len(X))
@@ -207,19 +211,39 @@ GBR.fit(x_train, y_train)
 
 # Evaluasi model LARS
 pred_lars = lars.predict(x_test)
-mae_lars = mean_absolute_error(y_test, pred_lars)
-mse_lars = mean_squared_error(y_test, pred_lars)
-r2_lars = r2_score(y_test, pred_lars)
 
-data = {
-    'MAE': [mae_lars],
-    'MSE': [mse_lars],
-    'R2': [r2_lars]
-}
+# Evaluasi model Linear Regression
+pred_LR = LR.predict(x_test)
+mae_LR = mean_absolute_error(y_test, pred_LR)
+mse_LR = mean_squared_error(y_test, pred_LR)
+r2_LR = r2_score(y_test, pred_LR)
 
-# Konversi dictionary
-df_results = pd.DataFrame(data, index=['Lars'])
-df_results
+# Evaluasi model Gradient Boosting Regressor
+pred_GBR = GBR.predict(x_test)
+mae_GBR = mean_absolute_error(y_test, pred_GBR)
+mse_GBR = mean_squared_error(y_test, pred_GBR)
+r2_GBR = r2_score(y_test, pred_GBR)
+
+
+df_results = pd.DataFrame({
+    'MAE': [
+        mean_absolute_error(y_test, pred_lars),
+        mean_absolute_error(y_test, pred_LR),
+        mean_absolute_error(y_test, pred_GBR)
+    ],
+    'MSE': [
+        mean_squared_error(y_test, pred_lars),
+        mean_squared_error(y_test, pred_LR),
+        mean_squared_error(y_test, pred_GBR)
+
+    ],
+    'R2': [        
+        r2_score(y_test, pred_lars),
+        r2_score(y_test, pred_LR),
+        r2_score(y_test, pred_GBR)]
+}, index=['Lars', 'LinearRegression', 'GradientBoosting'])
+
+print(df_results)
 
 # sample = pd.read_csv("sample_submission.csv")
 # train.head()
